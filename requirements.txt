@@ -1,0 +1,4 @@
+Airshare
+qrcode[pil]==6.1
+pycairo
+PyGObject
