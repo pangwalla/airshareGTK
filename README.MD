@@ -7,7 +7,6 @@ A simple GTK-based GUI for the [airshare](https://github.com/KuroLabs/Airshare) 
 + Single file sharing for now
 
 ## Installation
----
 ```bash
 git clone link
 cd airshareGTK
@@ -16,7 +15,6 @@ cd airshareGTK
 Should be available in your application menu
 
 ## Known Issues
----
 Let me know
 
 Be sure to check your firewall for access to the default airshare port (8000)
