@@ -7,6 +7,8 @@ A simple GTK-based GUI for the [airshare](https://github.com/KuroLabs/Airshare) 
 + Single file sharing for now
 
 ## Installation
+Note: May work on other Unix systems but built within Gnome DE on running on Debian
+
 ```bash
 git clone https://github.com/pangwalla/airshareGTK.git
 cd airshareGTK
