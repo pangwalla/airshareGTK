@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# virtualenv env
-# source env/bin/activate
-# pip install -r requirements.txt
+virtualenv env
+source env/bin/activate
+pip install -r requirements.txt
 
 prg=$0
 if [ ! -e "$prg" ]; then
