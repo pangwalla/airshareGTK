@@ -152,9 +152,10 @@ class MainWindow(Gtk.ApplicationWindow):
         print(self.serverName.get_text())
         if self.filepath is not None:
             self.process = airshare.sender.send_server_proc(code=self.serverName.get_text(), file=self.filepath)
+            self.makeQRcode()
             self.img.set_from_file(temppath)
             try:
-                    self.process.start()
+                self.process.start()
             except airshare.exception.CodeExistsError as cee:
                 pass
             except Exception as e:
