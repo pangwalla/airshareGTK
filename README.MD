@@ -2,6 +2,8 @@
 
 A simple GTK-based GUI for the [airshare](https://github.com/KuroLabs/Airshare) network sharing tool
 
+![screenshot](/assets/screenshot.png)
+
 ## Features
 + Can use the send and receive server components
 + Single file sharing for now
