@@ -1,14 +1,14 @@
 # Airshare GTK GUI
 
 A simple GTK-based GUI for the [airshare](https://github.com/KuroLabs/Airshare) network sharing tool
----
+
 ## Features
 + Can use the send and receive server components
 + Single file sharing for now
 
 ## Installation
 ```bash
-git clone link
+git clone https://github.com/pangwalla/airshareGTK.git
 cd airshareGTK
 ./install.sh
 ```
