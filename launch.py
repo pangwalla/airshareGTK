@@ -8,6 +8,7 @@ import qrcode
 
 scriptDirectory = os.path.dirname(os.path.realpath(__file__))
 logopath = scriptDirectory+'/assets/Airshare.svg'
+downloadImage = scriptDirectory+'/assets/arrow-down-circle.svg'
 temppath = scriptDirectory+'/tmp/temp.png'
 
 def get_url():
@@ -29,6 +30,7 @@ class MainWindow(Gtk.ApplicationWindow):
         '''
         Gtk.ApplicationWindow.__init__(self, *args, **kwargs)
         self.serverState = 'stopped'
+        self.filepath = None
         self.set_icon_from_file(logopath)
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
         vbox.set_margin_top(20)
@@ -63,7 +65,9 @@ class MainWindow(Gtk.ApplicationWindow):
         # Create switch at top for send/receive
         self.stack.add_titled(sendbox, "send", "Send")
 
-        receive_label = Gtk.Label(label='Receive')
+        #receive_label = Gtk.Label(label='Receive')
+        receive_label = Gtk.Image()
+        receive_label.set_from_file(downloadImage)
         self.stack.add_titled(receive_label, "receive", "Receive")
 
         stack_switcher = Gtk.StackSwitcher()
@@ -139,29 +143,32 @@ class MainWindow(Gtk.ApplicationWindow):
             self.img.set_from_file(logopath)
         elif self.serverState == 'stopped':
             selected = self.stack.get_visible_child_name()
-            self.inactivate_buttons()
-            self.updateURLLabel()
             if selected == 'send':
-                self.send_file_start()
+                if self.filepath is not None:
+                    self.inactivate_buttons()
+                    self.updateURLLabel()
+                    self.send_file_start()
+                    self.serverState = 'running'
+                else:
+                    self.showURL.set_text('Please select a file')
             elif selected == 'receive':
+                self.inactivate_buttons()
+                self.updateURLLabel()
                 self.receive_file_start()
-            self.serverState = 'running'
+                self.serverState = 'running'
 
     def send_file_start(self):
         'Start send file server'
-        print(self.serverName.get_text())
-        if self.filepath is not None:
-            self.process = airshare.sender.send_server_proc(code=self.serverName.get_text(), file=self.filepath)
-            self.makeQRcode()
-            self.img.set_from_file(temppath)
-            try:
-                self.process.start()
-            except airshare.exception.CodeExistsError as cee:
-                pass
-            except Exception as e:
-                print(e)
-        else:
-            self.showURL.set_text('Please select a file')
+        self.process = airshare.sender.send_server_proc(code=self.serverName.get_text(), file=self.filepath)
+        self.makeQRcode()
+        self.img.set_from_file(temppath)
+        try:
+            self.process.start()
+        except airshare.exception.CodeExistsError as cee:
+            pass
+        except Exception as e:
+            print(e)
+
 
     def receive_file_start(self):
         'Start receive server'
@@ -183,14 +190,13 @@ class MainWindow(Gtk.ApplicationWindow):
             pass
 
 
-
 def on_activate(app):
     global window
     window = MainWindow(application=app, title='Airshare')
     window.show_all()
     window.set_position(Gtk.WindowPosition.CENTER)
 
-app = Gtk.Application(application_id='com.clow.airshareWidget')
+app = Gtk.Application(application_id='com.pangwalla.airshareWidget')
 app.connect('activate', on_activate)
 
 try:

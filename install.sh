@@ -1,27 +1,43 @@
-#!/bin/bash
+#!/bin/bash -e
 
-virtualenv env
-source env/bin/activate
-pip install -r requirements.txt
+####################################
+# Short installation script
+# + Creates python virtual environment
+# + Sources it
+# + Configures .desktop file
+# + Moves it to appropriate directory
+#####################################
 
-prg=$0
-if [ ! -e "$prg" ]; then
-  case $prg in
+SCRIPT_PATH=$0
+if [ ! -e "$SCRIPT_PATH" ]; then
+  case $SCRIPT_PATH in
     (*/*) exit 1;;
-    (*) prg=$(command -v -- "$prg") || exit;;
+    (*) SCRIPT_PATH=$(command -v -- "$SCRIPT_PATH") || exit;;
   esac
 fi
-dir=$(
-  cd -P -- "$(dirname -- "$prg")" && pwd -P
+SCRIPT_DIR=$(
+  cd -P -- "$(dirname -- "$SCRIPT_PATH")" && pwd -P
 ) || exit
-prg="$dir"/run.sh
-icon="$dir"/assets/Airshare.svg
+SCRIPT_PATH="$SCRIPT_DIR"/run.sh
+ICON="$SCRIPT_DIR"/assets/Airshare.svg
 
-sed -i 's|Exec=.*$|Exec='"${prg}"'|g' airshare.desktop
-sed -i 's|Icon=.*$|Icon='"${icon}"'|g' airshare.desktop
 
-cp airshare.desktop ~/.local/share/applications/
 
-echo ""
-echo ""
-echo "Installation finished"
+if which virtualenv &>/dev/null; then
+    virtualenv "$SCRIPT_DIR"/env > /dev/null
+    echo "Installing python virtual env"
+else
+    echo -e "Quitting... \nPlease install virtualenv via your local package manager"
+    exit 1
+fi
+
+source "$SCRIPT_DIR"/env/bin/activate
+echo "Installing dependencies"
+pip install -r "$SCRIPT_DIR"/requirements.txt > /dev/null
+
+sed -i 's|Exec=.*$|Exec='"${SCRIPT_PATH}"'|g' airshare.desktop
+sed -i 's|Icon=.*$|Icon='"${ICON}"'|g' airshare.desktop
+
+cp "$SCRIPT_DIR"/airshare.desktop ~/.local/share/applications/
+
+echo -e "\nInstallation finished."

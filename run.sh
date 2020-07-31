@@ -1,20 +1,20 @@
 #!/bin/bash
 
-prg=$0
-if [ ! -e "$prg" ]; then
-  case $prg in
+SCRIPT_PATH=$0
+if [ ! -e "$SCRIPT_PATH" ]; then
+  case $SCRIPT_PATH in
     (*/*) exit 1;;
-    (*) prg=$(command -v -- "$prg") || exit;;
+    (*) SCRIPT_PATH=$(command -v -- "$SCRIPT_PATH") || exit;;
   esac
 fi
-dir=$(
-  cd -P -- "$(dirname -- "$prg")" && pwd -P
+SCRIPT_DIR=$(
+  cd -P -- "$(dirname -- "$SCRIPT_PATH")" && pwd -P
 ) || exit
-prg="$dir"/launch.py
+SCRIPT_PATH="$SCRIPT_DIR"/launch.py
 
-source "$dir"/env/bin/activate
+source "$SCRIPT_DIR"/env/bin/activate
 echo "launching airshare widget..."
-python $prg
+python $SCRIPT_PATH
 deactivate
 
 PID=`pgrep launch.py`
@@ -22,6 +22,6 @@ if [ ! -z "$PID" ]; then
   kill -9 $PID
 fi
 
-if [ -f "$dir"/tmp/temp.png ]; then
-  rm "$dir"/tmp/temp.png
+if [ -f "$SCRIPT_DIR"/tmp/temp.png ]; then
+  rm "$SCRIPT_DIR"/tmp/temp.png
 fi
